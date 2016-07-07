@@ -67,10 +67,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }
       },
 
-      // attached: function() {
-      //   // TODO: should be able to retrieve the access token without re-authenticating.
-      //   this._login();
-      // },
+      attached: function() {
+        // TODO: should be able to retrieve the access token without re-authenticating.
+        this._login();
+      },
 
       _onLoginTap: function() {
         if (this.githubUser) {
