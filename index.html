@@ -1,0 +1,44 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>oauth</title>
+
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1, user-scalable=yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+
+  <link rel="import" href="./bower_components/polymer/polymer.html">
+  <script src="./bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+  <link rel="import" href="./auth-element.html">
+  <style>
+  body {
+    margin: 100px;
+    font-family: sans-serif;
+  }
+  </style>
+</head>
+<body>
+  <auth-element id="ae"></auth-element>
+  <br>
+  <br>
+  Below is a container that appears when this page knows you're authenticated:
+  <div id="output" hidden>
+    Whomp!
+  </div>
+</body>
+<script>
+function userChanged() {
+  debugger
+  if (ae.githubUser) {
+    output.hidden = false;
+  } else {
+    output.hidden = true;
+  }
+}
+// Auth might happen before we have a listener, so...
+//userChanged();
+
+ae.addEventListener('auth-ready', userChanged);
+</script>
+</html>

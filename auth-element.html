@@ -1,0 +1,107 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/firebase-element/firebase-app.html">
+<link rel="import" href="../bower_components/firebase-element/firebase-auth.html">
+
+<dom-module id="auth-element">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+
+      button {
+        border: none;
+        outline: none;
+        background: #2196F3;
+        color: white;
+        cursor: pointer;
+        padding: 10px;
+        font-size: 16px;
+      }
+
+      .avatar {
+        border-radius: 50%;
+        width: 36px;
+        height: 36px;
+        vertical-align: middle;
+        margin-left: 16px;
+      }
+    </style>
+
+    <p>Logged in? [[_isLoggedIn(githubUser)]]</p>
+
+    <p>Logged in user: {{githubUser.displayName}} <img class="avatar" alt="github avatar" src="[[githubUser.photoURL]]"></p>
+
+    <button on-tap="_onLoginTap">
+      {{_buttonText(githubUser)}}
+    </button>
+
+    <firebase-app auth-domain="hunger-games-cd59c.firebaseapp.com"
+        database-url="https://hunger-games-cd59c.firebaseio.com/"
+        api-key="AIzaSyC-zR7x4PtgGcURfA4aTQX-I8PWoTWX-yI">
+    </firebase-app>
+
+    <firebase-auth id="githubAuth" user="{{githubUser}}" provider="github"></firebase-auth>
+  </template>
+
+  <script>
+    Polymer({
+      is: 'auth-element',
+      properties: {
+        /**
+         * The authenticated GitHub user, as returned by a <firebase-auth> element.
+         */
+        githubUser: {
+          type: Object,
+          notify: true
+        }
+      },
+
+      // attached: function() {
+      //   // TODO: should be able to retrieve the access token without re-authenticating.
+      //   this._login();
+      // },
+
+      _onLoginTap: function() {
+        if (this.githubUser) {
+          this._token = null;
+          this.$.githubAuth.signOut();
+        } else {
+          this._login();
+        }
+      },
+
+      _login: function() {
+        var provider = new firebase.auth.GithubAuthProvider();
+        provider.addScope('user:email');
+        provider.addScope('admin:org');
+        provider.addScope('repo');
+
+        var self = this;
+        this.$.githubAuth.signInWithPopup(provider).then(function(result) {
+          console.log('got a token');
+          self._token = result.credential.accessToken;
+          self.fire('auth-ready');
+        });
+      },
+
+      _buttonText: function(githubUser) {
+        return githubUser ? 'Sign out of GitHub' : 'Sign in with GitHub';
+      },
+
+      _isLoggedIn: function(githubUser) {
+        return !!githubUser;
+      }
+    });
+  </script>
+</dom-module>
