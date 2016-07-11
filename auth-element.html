@@ -68,13 +68,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       },
 
       attached: function() {
-        // TODO: should be able to retrieve the access token without re-authenticating.
-        this._login();
+        this.accessToken = localStorage.getItem("__auth_test_token__");
+        if (!this.accessToken) {
+          console.log('no token, signing out');
+          this.$.githubAuth.signOut();
+        } else {
+          console.log('have token');
+          this.fire('auth-ready');
+        }
       },
 
       _onLoginTap: function() {
         if (this.githubUser) {
-          this._token = null;
+          this.accessToken = null;
           this.$.githubAuth.signOut();
         } else {
           this._login();
@@ -90,7 +96,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         var self = this;
         this.$.githubAuth.signInWithPopup(provider).then(function(result) {
           console.log('got a token');
-          self._token = result.credential.accessToken;
+          self.accessToken = result.credential.accessToken;
+          localStorage.setItem("__auth_test_token__", self.accessToken);
           self.fire('auth-ready');
         });
       },

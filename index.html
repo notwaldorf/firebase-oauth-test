@@ -29,15 +29,12 @@
 </body>
 <script>
 function userChanged() {
-  debugger
-  if (ae.githubUser) {
+  if (ae.accessToken) {
     output.hidden = false;
   } else {
     output.hidden = true;
   }
 }
-// Auth might happen before we have a listener, so...
-//userChanged();
 
 ae.addEventListener('auth-ready', userChanged);
 </script>
