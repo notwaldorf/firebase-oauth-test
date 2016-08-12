@@ -2,8 +2,7 @@
   "name": "firebase-oauth-test",
   "version": "0.0.1",
   "description": "oauth is so hard",
-  "authors": "The Polymer Authors",
-  "license": "http://polymer.github.io/LICENSE.txt",
+  "authors": "Monica Dinculescu <noms@google.com>",
   "main": "index.html",
   "ignore": [],
   "repository": {
